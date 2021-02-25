@@ -1,5 +1,5 @@
 #---------------------
-# 2/4 6:30PM (Phillip Paperbot)
+# 2/25 12:30PM (Phillip Paperbot)
 
 import math
 
@@ -37,8 +37,8 @@ def x_next(state,input_):
     w_r = input_[1]
     
     # converting angular speed to linear speed for each wheel, linear speed v = angular speed w * radius r
-    v_l = w_l/(180)*(math.pi) * d/2
-    v_r = w_r/(180)*(math.pi) * d/2
+    v_l = w_l/(180)*(math.pi) * d/2 # 65.4 for angular speed = 150
+    v_r = w_r/(180)*(math.pi) * d/2 #87.2 for angular speed = 200
 
     # V_l == V_r, straight line
     if(w_l == w_r):
@@ -48,12 +48,14 @@ def x_next(state,input_):
     
     else:
     	omega = (v_r-v_l) / w
-    	R = (w/2) * (v_r+v_l) / (v_r-v_l)
-    	ICC = [x - R*math.cos(theta),y - R*math.sin(theta)]
+    	#R = (w/2) * (v_r+v_l) / (v_r-v_l)
+    	#ICC = [x - R*math.cos(theta),y - R*math.sin(theta)]
   
-    	newX = math.cos(omega * delta_t) * (x - ICC[0]) - math.sin(omega * delta_t) * (y - ICC[1]) + ICC[0]
-    	newY = math.sin(omega * delta_t) * (x - ICC[0]) + math.cos(omega * delta_t) * (y - ICC[1]) + ICC[1]
+    	#newX = math.cos(omega * delta_t) * (x - ICC[0]) - math.sin(omega * delta_t) * (y - ICC[1]) + ICC[0]
+    	#newY = math.sin(omega * delta_t) * (x - ICC[0]) + math.cos(omega * delta_t) * (y - ICC[1]) + ICC[1]
     	newTheta = theta + omega*delta_t
+    	newY = y + (v_r + v_l) / (v_l - v_r) * w / 2 * math.cos(theta) * math.cos((v_r - v_l) / w * delta_t) + (v_r + v_l) / (v_r - v_l) * w / 2 * math.sin(theta) * math.sin((v_r - v_l) / w * delta_t) + (v_r + v_l) / (v_r - v_l) * w / 2 * math.cos(theta)
+    	newX = x + (v_r + v_l) / (v_r - v_l) * w / 2 * cos(theta) * math.sin((v_r - v_l) / w * delta_t) + (v_r + v_l) / (v_r - v_l) * w / 2 * sin(theta) * math.cos((v_r - v_l) / w * delta_t) + (v_r + v_l) / (v_l - v_r) * w / 2 * math.sin(theta)
     	
     newState = [newX,newY,newTheta]
     if(isValid(newState)):
